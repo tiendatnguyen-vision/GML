@@ -2,46 +2,29 @@ DEFAULT: &DEFAULT
   gpu_deny_list: [1, 2, 3]
   num_gpus_total: 4
   num_gpus_to_use: 1
-  dropout: 0.5
-  seed: 42
-  verbose: 2
-  save_model: False
-  save_plot: False
-  val_interval: 1
-  l2_lambda: 0.0
+  dropout: 0.6
+  l2_lambda: 0.01
   is_super_gat: False
   is_link_gnn: False
   lr: 0.001
   epochs: 300
-
-MLP: &MLP
-  model_name: MLP
-  <<: *DEFAULT
-  num_hidden_features: 2048
-
-GCN: &GCN
-  model_name: GCN
-  <<: *DEFAULT
-  num_hidden_features: 2048
-
-GIN: &GIN
-  model_name: GIN
-  <<: *DEFAULT
-  num_hidden_features: 2048
-
-GAT: &GAT
-  model_name: GAT
-  <<: *DEFAULT
-  num_hidden_features: 128
-  heads: 16
+  seed: 42
+  verbose: 2
+  save_model: True
+  save_ckpt_interval: 50
+  save_last_only: False
+  save_plot: False
+  continue_training: False
+  val_interval: 1
+  num_total_runs: 1
 
 TokenGT: &TokenGT
   model_name: TokenGT
   <<: *DEFAULT
-  encoder_layers: 4
-  encoder_embed_dim: 2048
-  encoder_ffn_embed_dim: 0
-  encoder_attention_heads: 16
+  encoder_layers: 3
+  encoder_embed_dim: 128
+  encoder_ffn_embed_dim: 128
+  encoder_attention_heads: 2
   input_dropout: 0.5
   attention_dropout: 0.0
   activation_dropout: 0.5

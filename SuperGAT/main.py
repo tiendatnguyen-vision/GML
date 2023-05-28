@@ -289,6 +289,14 @@ def run(args, gpu_id=None, return_model=False, return_time_series=False):
     net_cls = _get_model_cls(args.model_name)
     net = net_cls(args, train_d)
     net = net.to(running_device)
+    
+    """
+    net =  SuperGATNet(
+      (conv1): SuperGAT(500, 8, heads=8, concat=True, att_type=basic, nsr=0.0, pnr=0.0)
+      (conv2): SuperGAT(64, 15, heads=1, concat=False, att_type=basic, nsr=0.0, pnr=0.0)
+    )
+    num_params =  95607
+    """
 
     loaded = load_model(net, args, target_epoch=None)
     if loaded is not None:

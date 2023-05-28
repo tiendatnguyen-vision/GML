@@ -21,15 +21,22 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
     parser.add_argument("--num-gpus-total", default=0, type=int)
     parser.add_argument("--num-gpus-to-use", default=0, type=int)
     parser.add_argument("--gpu-deny-list", default=None, type=int, nargs="+")
-    parser.add_argument("--checkpoint-dir", default="../checkpoints")
+    parser.add_argument("--origin-dir", default="save")
+    parser.add_argument("--checkpoint-dir", default="checkpoints_")
+    parser.add_argument("--outf-dir", default="outf")
     parser.add_argument("--model-name", default=model_name)
     parser.add_argument("--task-type", default="", type=str)
     parser.add_argument("--perf-type", default="accuracy", type=str)
     parser.add_argument("--custom-key", default=custom_key)
     parser.add_argument("--save-model", default=False)
+    parser.add_argument("--save-last-only", default=False)
+    parser.add_argument("--save-ckpt-interval", type=int, default=20)
+    parser.add_argument("--continue-training", default=False)
     parser.add_argument("--verbose", default=2)
     parser.add_argument("--save-plot", default=False)
     parser.add_argument("--seed", default=42)
+    parser.add_argument("--num-total-runs", type=int, default=1)
+    parser.add_argument("--gpu-id", type=int, default=0)
 
     # Dataset
     parser.add_argument('--data-root', default="dataset", metavar='DIR', help='path to dataset')
@@ -58,7 +65,23 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
     parser.add_argument("--num-layers", default=2, type=int)
     parser.add_argument("--use-bn", default=False, type=bool)
     parser.add_argument("--perf-task-for-val", default="Node", type=str)  # Node or Link
-
+    
+    # Knowledge distillation
+    parser.add_argument("--use-kd", action="store_true")
+    parser.add_argument("--w-kd-feat", default = 0.1, type=float)
+    parser.add_argument("--w-kd-response", default = 0.1, type=float)
+    parser.add_argument("--freeze-connector", action="store_true")
+    parser.add_argument("--teacher-name", default="GCN", type=str, choices=["GCN", "GIN", "GAT"])
+    parser.add_argument("--teacher-lr", default=0.001, type=float)
+    parser.add_argument("--teacher-l2-lambda", default=0.0, type=float)
+    parser.add_argument("--teacher-heads", default=8, type=int)
+    parser.add_argument("--teacher-dropout", default=0.6, type=float)
+    parser.add_argument("--teacher-num-hidden-features", default=128, type=int)
+    parser.add_argument("--student-intermediate-index", default=1, type=int)
+    # For loading teacher model
+    parser.add_argument("--teacher-checkpoint-dir", default="save/checkpoints_", type=str)
+    parser.add_argument("--teacher-seed", default=42, type=int)
+    
     # Early stop
     parser.add_argument("--use-early-stop", default=False, type=bool)
     parser.add_argument("--early-stop-patience", default=-1, type=int)
@@ -127,6 +150,9 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
 
     # Test
     parser.add_argument("--val-interval", default=1)
+    
+    # Others
+    parser.add_argument("--tmp-mode", action="store_true")
 
     # Experiment specific parameters loaded from .yamls
     with open(yaml_path) as args_file:

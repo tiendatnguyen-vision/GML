@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from termcolor import cprint
-
+import random
 from data import get_dataset_or_loader, getattr_d
 
 from pprint import pprint
@@ -13,6 +13,13 @@ import scipy
 import numpy as np
 from _tokengt_lib import ProjectionUpdater, MultiheadAttention, TokenGTGraphEncoderLayer, gaussian_orthogonal_random_matrix
 
+seed=42
+random.seed(seed)
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+np.random.seed(seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 def init_params(module):
     if isinstance(module, nn.Linear):
@@ -63,6 +70,7 @@ class TokenGTNet(nn.Module):
             self.lap_eig_dropout = nn.Dropout(p=args.lap_pe_eig_dropout) if args.lap_pe_eig_dropout > 0 else None
         if self.order_embed:
             self.order_encoder = nn.Embedding(2, args.encoder_embed_dim)
+
         self.layers = nn.ModuleList(
             [
                 TokenGTGraphEncoderLayer(
@@ -86,7 +94,17 @@ class TokenGTNet(nn.Module):
         self.final_layer_norm = nn.LayerNorm(args.encoder_embed_dim) if args.prenorm else None
         self.classifier_dropout = nn.Dropout(args.classifier_dropout, inplace=True)
         self.embed_out = nn.Linear(args.encoder_embed_dim, num_classes)
+        
+        ### Knowledge distillation 
+        if args.teacher_name == "GAT":
+            self.connector = nn.Linear(args.encoder_embed_dim, args.teacher_num_hidden_features * args.teacher_heads)
+        else: 
+            self.connector = nn.Linear(args.encoder_embed_dim, args.teacher_num_hidden_features)
 
+        if args.freeze_connector:
+            for param in self.connector.parameters():
+                param.requires_grad = False
+        
         self.apply(init_params)
 
         if args.performer:
@@ -158,6 +176,7 @@ class TokenGTNet(nn.Module):
         self.performer_proj_updater.feature_redraw_interval = None
 
     def forward(self, x, edge_index, batch=None, lap_eigvec=None, rand_pe=None, **kwargs):
+        # x is node features
         if self.performer:
             self.performer_proj_updater.redraw_projections()
         # x: [18333, 500]
@@ -165,11 +184,11 @@ class TokenGTNet(nn.Module):
         # lap_eigvec: [18333, 64]
           
         n_nodes = x.size(0)
-        x = self.input_dropout(x)
+        x = self.input_dropout(x) # !!
         x = self.tokenize(x, lap_eigvec, rand_pe, edge_index)  # x: T x C
         
         # x: [182121, 256]
-
+        dict_features = {}
         for i in range(len(self.layers)):
             layer = self.layers[i]
             x = layer(x, n_nodes=n_nodes, node_output=(i == len(self.layers) - 1) or self.drop_edge_tokens)
@@ -177,8 +196,11 @@ class TokenGTNet(nn.Module):
                 x[:n_nodes] = x[:n_nodes] + \
                               torch.sparse_coo_tensor(edge_index[0:1], x[n_nodes:],
                                                       size=(n_nodes, x.size(-1))).coalesce().to_dense()
+            dict_features["L{}".format(i+1)] = x 
 
         if self.final_layer_norm is not None:
             x = self.final_layer_norm(x)
-
-        return self.embed_out(self.classifier_dropout(x))
+    
+        x = self.embed_out(self.classifier_dropout(x))
+        dict_features["logits"] = x 
+        return dict_features
