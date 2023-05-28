@@ -9,7 +9,7 @@ def get_args_key(args):
 
 
 def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=None) -> argparse.Namespace:
-    yaml_path = yaml_path or os.path.join(os.path.dirname(os.path.realpath(__file__)), "_GNN_args.yaml")
+    #yaml_path = yaml_path or os.path.join(os.path.dirname(os.path.realpath(__file__)), "_GNN_args.yaml")
 
     custom_key = custom_key.split("+")[0]
 
@@ -17,23 +17,22 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
 
     # Basics
     parser.add_argument("--m", default="", type=str, help="Memo")
-    parser.add_argument("--num-gpus-total", default=0, type=int)
-    parser.add_argument("--num-gpus-to-use", default=0, type=int)
-    parser.add_argument("--gpu-deny-list", default=None, type=int, nargs="+")
+    parser.add_argument("--num-gpus-total", default=1, type=int)
+    parser.add_argument("--num-gpus-to-use", default=1, type=int)
     parser.add_argument("--checkpoint-dir", default="save/checkpoints_")
     parser.add_argument("--outf-dir", default="save/outf")
     parser.add_argument("--model-name", default=model_name)
     parser.add_argument("--task-type", default="", type=str)
     parser.add_argument("--perf-type", default="accuracy", type=str)
     parser.add_argument("--custom-key", default=custom_key)
-    parser.add_argument("--save-model", default=False)
+    parser.add_argument("--save-model", default=True)
     parser.add_argument("--save-last-only", default=False)
-    parser.add_argument("--save-ckpt-interval", type=int, default=20)
+    parser.add_argument("--save-ckpt-interval", type=int, default=50)
     parser.add_argument("--continue-training", default=False)
     parser.add_argument("--verbose", default=2)
     parser.add_argument("--save-plot", default=False)
     parser.add_argument("--seed", default=42)
-    parser.add_argument("--num-total-runs", type=int)
+    parser.add_argument("--num-total-runs", type=int, default=1)
     parser.add_argument("--gpu-id", type=int, default=0)
 
     # Dataset
@@ -46,24 +45,24 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
     parser.add_argument("--data-sampler", default=None, type=str)
 
     # Training
-    parser.add_argument('--lr', '--learning-rate', default=0.0025, type=float,
+    parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
                         metavar='LR', help='initial learning rate', dest='lr')
     parser.add_argument('--batch-size', default=128, type=int,
                         metavar='N',
                         help='mini-batch size (default: 128), this is the total '
                              'batch size of all GPUs on the current node when '
                              'using Data Parallel or Distributed Data Parallel')
-    parser.add_argument('--epochs', default=100, type=int, metavar='N',
+    parser.add_argument('--epochs', default=300, type=int, metavar='N',
                         help='number of total epochs to run')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='manual epoch number (useful on restarts)')
     parser.add_argument("--loss", default=None, type=str)
-    parser.add_argument("--l1-lambda", default=0., type=float)
-    parser.add_argument("--l2-lambda", default=0., type=float)
+    parser.add_argument("--l1-lambda", default=0.0, type=float)
+    parser.add_argument("--l2-lambda", default=0.0, type=float)
     parser.add_argument("--num-layers", default=2, type=int)
     parser.add_argument("--use-bn", default=False, type=bool)
     parser.add_argument("--perf-task-for-val", default="Node", type=str)  # Node or Link
-    parser.add_argument("--dropout", type=float)
+    parser.add_argument("--dropout", type=float, default=0.6)
     
     # Early stop
     parser.add_argument("--use-early-stop", default=False, type=bool)
@@ -73,7 +72,7 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
     parser.add_argument("--early-stop-threshold-perf", default=-1.0, type=float)
 
     # Graph
-    parser.add_argument("--num-hidden-features", default=64, type=int)
+    parser.add_argument("--num-hidden-features", default=128, type=int)
     parser.add_argument("--heads", default=8, type=int)
     parser.add_argument("--out-heads", default=None, type=int)
     parser.add_argument("--pool-name", default=None)
@@ -103,17 +102,9 @@ def get_args(model_name, dataset_class, dataset_name, custom_key="", yaml_path=N
     # Test
     parser.add_argument("--val-interval", default=1)
 
-    # Experiment specific parameters loaded from .yamls
-    with open(yaml_path) as args_file:
-        args = parser.parse_args()
-        args_key = args.model_name
-        try:
-            parser.set_defaults(**dict(YAML().load(args_file)[args_key].items()))
-        except KeyError:
-            raise AssertionError("KeyError: there's no {} in yamls".format(args_key), "red")
-
     # Update params from .yamls
     args = parser.parse_args()
+    #args = parser.parse_args(args=[])
     return args
 
 
@@ -174,11 +165,3 @@ def pdebug_args(_args: argparse.Namespace, logger):
     logger.debug("Args LOGGING-PDEBUG: {}".format(get_args_key(_args)))
     for k, v in sorted(_args.__dict__.items()):
         logger.debug("\t- {}: {}".format(k, v))
-
-
-if __name__ == '__main__':
-    test_args = get_args("GAT", "Planetoid", "Cora", "NE")
-    print(type(test_args))
-    print(test_args)
-    print(get_important_args(test_args))
-    pprint_args(test_args)

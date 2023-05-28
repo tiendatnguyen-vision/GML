@@ -11,9 +11,9 @@ from torch_geometric.data import (InMemoryDataset, Data, download_url,
                                   extract_zip)
 from tqdm import trange
 
-from data_sampler import MyNeighborSampler
-from data_saint import GraphSAINTRandomWalkSampler, MyGraphSAINTRandomWalkSampler
-from utils import s_join, create_hash
+from SuperGAT.data_sampler import MyNeighborSampler
+from SuperGAT.data_saint import GraphSAINTRandomWalkSampler, MyGraphSAINTRandomWalkSampler
+from SuperGAT.utils import s_join, create_hash
 
 
 class MyReddit(InMemoryDataset):

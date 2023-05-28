@@ -18,14 +18,16 @@ import pandas as pd
 from termcolor import cprint
 from tqdm import tqdm
 from sklearn.metrics import f1_score
+import sys
+sys.path.insert(0,'/data2/HW/GML/Colab/GML')
 
-from _tokengt_arguments import get_important_args, save_args, get_args, pprint_args, get_args_key
-from _tokengt_model import TokenGTNet
-from _test_model_baseline import _test_MLPNet, _test_GNN
+from SuperGAT._tokengt_arguments import get_important_args, save_args, get_args, pprint_args, get_args_key
+from SuperGAT._tokengt_model import TokenGTNet
+from SuperGAT._test_model_baseline import _test_MLPNet, _test_GNN
 
-from data import getattr_d, get_dataset_or_loader
-from layer import SuperGAT
-from utils import create_hash, to_one_hot, get_accuracy, cprint_multi_lines, blind_other_gpus
+from SuperGAT.data import getattr_d, get_dataset_or_loader
+from SuperGAT.layer import SuperGAT
+from SuperGAT.utils import create_hash, to_one_hot, get_accuracy, cprint_multi_lines, blind_other_gpus
 
 from torch_geometric.utils import to_undirected, remove_self_loops, add_self_loops
 import math
@@ -616,8 +618,6 @@ if __name__ == '__main__':
     pprint_args(main_args)
 
     # noinspection PyTypeChecker
-    t0 = time.perf_counter()
     many_seeds_result = run_with_many_seeds(main_args, main_args.num_total_runs, gpu_id = main_args.gpu_id)
     pprint_args(main_args)
     summary_results(many_seeds_result)
-    cprint("Time for runs (s): {}".format(time.perf_counter() - t0))

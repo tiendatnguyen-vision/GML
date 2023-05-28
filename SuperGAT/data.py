@@ -24,17 +24,17 @@ from tqdm import tqdm
 import ogb
 from ogb.nodeproppred import PygNodePropPredDataset
 
-from data_saint import MyGraphSAINTRandomWalkSampler, DisjointGraphSAINTRandomWalkSampler
-from data_sampler import MyNeighborSampler
-from data_syn import RandomPartitionGraph
-from data_transform import DigitizeY, ToUndirected
-from data_utils import mask_init, mask_getitem, collate_and_pca, get_loader_and_dataset_kwargs
-from data_webkb4univ import WebKB4Univ
-from data_flickr import Flickr
-from data_wikics import WikiCS
-from data_snap import SNAPDataset, Crocodile, Squirrel, Chameleon
-from data_reddit import MyReddit
-from utils import negative_sampling_numpy
+from SuperGAT.data_saint import MyGraphSAINTRandomWalkSampler, DisjointGraphSAINTRandomWalkSampler
+from SuperGAT.data_sampler import MyNeighborSampler
+from SuperGAT.data_syn import RandomPartitionGraph
+from SuperGAT.data_transform import DigitizeY, ToUndirected
+from SuperGAT.data_utils import mask_init, mask_getitem, collate_and_pca, get_loader_and_dataset_kwargs
+from SuperGAT.data_webkb4univ import WebKB4Univ
+from SuperGAT.data_flickr import Flickr
+from SuperGAT.data_wikics import WikiCS
+from SuperGAT.data_snap import SNAPDataset, Crocodile, Squirrel, Chameleon
+from SuperGAT.data_reddit import MyReddit
+from SuperGAT.utils import negative_sampling_numpy
 
 from multiprocessing import Process, Queue
 import os

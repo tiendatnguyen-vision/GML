@@ -27,5 +27,5 @@ python SuperGAT/_tokengt_main.py \
     --teacher-dropout 0.6 \
     --teacher-num-hidden-features 8 \
     --student-intermediate-index 2 \
-    --num-total-runs 5 \
+    --num-total-runs 1 \
     --gpu-id 1 \

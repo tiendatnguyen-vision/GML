@@ -15,7 +15,7 @@ import torch_geometric.nn.inits as tgi
 
 from typing import List
 
-from utils import np_sigmoid
+from SuperGAT.utils import np_sigmoid
 
 
 def is_pretraining(current_epoch, pretraining_epoch):

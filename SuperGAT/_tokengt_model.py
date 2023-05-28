@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from termcolor import cprint
 import random
-from data import get_dataset_or_loader, getattr_d
+from SuperGAT.data import get_dataset_or_loader, getattr_d
 
 from pprint import pprint
 from typing import Tuple, List
@@ -11,7 +11,7 @@ from typing import Tuple, List
 import math
 import scipy
 import numpy as np
-from _tokengt_lib import ProjectionUpdater, MultiheadAttention, TokenGTGraphEncoderLayer, gaussian_orthogonal_random_matrix
+from SuperGAT._tokengt_lib import ProjectionUpdater, MultiheadAttention, TokenGTGraphEncoderLayer, gaussian_orthogonal_random_matrix
 
 seed=42
 random.seed(seed)

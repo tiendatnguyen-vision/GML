@@ -17,7 +17,7 @@ import numpy as np
 
 from torch_sparse import SparseTensor
 
-from utils import negative_sampling_numpy, iter_window, grouper
+from SuperGAT.utils import negative_sampling_numpy, iter_window, grouper
 
 try:
     from torch_cluster import neighbor_sampler

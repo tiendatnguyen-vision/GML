@@ -10,9 +10,9 @@ from torch_geometric.utils import remove_self_loops, add_self_loops
 from torch_geometric.utils import negative_sampling, batched_negative_sampling
 import torch_geometric.nn.inits as tgi
 
-from layer import is_pretraining
-from layer_cgat import CGATConv
-from data import getattr_d, get_dataset_or_loader
+from SuperGAT.layer import is_pretraining
+from SuperGAT.layer_cgat import CGATConv
+from SuperGAT.data import getattr_d, get_dataset_or_loader
 
 
 def _get_gn_cls(cls_name: str):
