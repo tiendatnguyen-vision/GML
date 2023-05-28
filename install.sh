@@ -1,8 +1,18 @@
-CUDA=${1:-"cu100"}
-pip3 install torch==1.4.0+${CUDA} -f https://download.pytorch.org/whl/torch_stable.html
-pip3 install torch-scatter==2.0.4 -f https://pytorch-geometric.com/whl/torch-1.4.0+${CUDA}.html
-pip3 install torch-sparse==0.6.1 -f https://pytorch-geometric.com/whl/torch-1.4.0+${CUDA}.html
-pip3 install torch-cluster==1.5.4 -f https://pytorch-geometric.com/whl/torch-1.4.0+${CUDA}.html
-pip3 install torch-geometric==1.4.3
-pip3 install -r requirements.txt
+# install requirements
+pip install torch==1.9.1+cu111 torchaudio -f https://download.pytorch.org/whl/cu111/torch_stable.html
+# install torchaudio, thus fairseq installation will not install newest torchaudio and torch(would replace torch-1.9.1)
+pip install lmdb
+pip install torch-scatter==2.0.9 -f https://pytorch-geometric.com/whl/torch-1.9.1+cu111.html
+pip install torch-sparse==0.6.12 -f https://pytorch-geometric.com/whl/torch-1.9.1+cu111.html
+pip install torch-cluster==1.5.9 -f https://pytorch-geometric.com/whl/torch-1.9.1+cu111.html
+pip install torch-geometric==1.7.2
+pip install tensorboardX==2.4.1
+pip install ogb==1.3.2
+pip install rdkit-pypi==2021.9.3
+pip install dgl==0.7.2 -f https://data.dgl.ai/wheels/repo.html
+pip install performer-pytorch
+pip install einops
+pip install tensorboard
+pip install setuptools==59.5.0
+pip install -r requirements.txt
 echo "install.sh finished!"
