@@ -68,7 +68,10 @@ class MultiheadPerformerAttention(MultiheadAttention):
         assert k.size(0) == src_len
 
         q, k, v = map(lambda t: rearrange(t, 'n (h d) -> h n d', h=self.num_heads)[None, ...], (q, k, v))
-        attn = self.fast_attention(q, k, v)[0]
+        attn = self.fast_attention(q, k, v)[0] # [2, 11701, 64]
+        # q: [1, 2, 11701, 64]
+        # k: [1, 2, 442907, 64]
+        # v: [1, 2, 442907, 64]
         attn = rearrange(attn, 'h n d -> n (h d)')
 
         attn = self.out_proj(attn)

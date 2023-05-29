@@ -1,0 +1,19 @@
+python SuperGAT/compute_locality.py \
+    --dataset-class MyCitationFull \
+    --dataset-name Cora_ML \
+    --model-name TokenGT \
+    --encoder-layers 3 \
+    --encoder-embed-dim 128 \
+    --encoder-ffn-embed-dim 128 \
+    --encoder-attention-heads 2 \
+    --performer-generalized-attention \
+    --performer-feature-redraw-interval 99 \
+    --input-dropout 0.3 \
+    --activation-dropout 0.1 \
+    --dropout 0.1 \
+    --classifier-dropout 0.5 \
+    --lap-pe \
+    --lap-pe-k 64 \
+    --lap-pe-eig-dropout 0.1 \
+    --broadcast-features \
+    --drop-edge-tokens \
