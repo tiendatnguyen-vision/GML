@@ -1,7 +1,7 @@
 import os
 import argparse
 import sys
-sys.path.insert(0,'/data2/HW/GML/Colab/GML')
+sys.path.insert(0,'/content/GML')
 
 import torch
 import torch.nn.functional as F
@@ -100,7 +100,7 @@ def get_ckpt_path(args):
         args.model_name,
         configuration_str
     )
-    save_best_path = os.path.join(save_best_path, "best.pth")
+    save_best_path = os.path.join(save_best_path, "0000300.pth")
     print("ckpt path = ", save_best_path)
     return save_best_path
     

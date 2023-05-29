@@ -17,4 +17,4 @@ python SuperGAT/_tokengt_main.py \
     --lap-pe-eig-dropout 0.1 \
     --broadcast-features \
     --drop-edge-tokens \
-    --num-total-runs 5 \
+    --num-total-runs 1 \

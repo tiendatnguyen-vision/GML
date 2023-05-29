@@ -510,7 +510,6 @@ def run(args, gpu_id=None, save_run=True, return_model=False, return_time_series
                 writer.add_scalar("Perf/val", val_perf, epoch)
                 writer.add_scalar("Perf/test", test_perf, epoch)
             
-        print("best_val_loss = ", best_val_loss)
         if args.save_model and save_run:
             if args.save_last_only:
                 if epoch == args.start_epoch + args.epochs:
