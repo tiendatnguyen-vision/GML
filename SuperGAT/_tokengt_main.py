@@ -19,7 +19,7 @@ from termcolor import cprint
 from tqdm import tqdm
 from sklearn.metrics import f1_score
 import sys
-sys.path.insert(0,'/data2/HW/GML/Colab/GML')
+sys.path.insert(0,'/content/GML')
 
 from SuperGAT._tokengt_arguments import get_important_args, save_args, get_args, pprint_args, get_args_key
 from SuperGAT._tokengt_model import TokenGTNet

@@ -28,4 +28,4 @@ python SuperGAT/_tokengt_main.py \
     --teacher-num-hidden-features 8 \
     --student-intermediate-index 2 \
     --num-total-runs 5 \
-    --gpu-id 1 \
+    --gpu-id 0 \

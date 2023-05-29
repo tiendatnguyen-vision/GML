@@ -18,4 +18,4 @@ python SuperGAT/_tokengt_main.py \
     --broadcast-features \
     --drop-edge-tokens \
     --num-total-runs 1 \
-    --gpu-id 1 \
+    --gpu-id 0 \
